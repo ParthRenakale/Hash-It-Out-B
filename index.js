@@ -8,10 +8,12 @@ import errorHandler from "./middleware/errorHandler.js";
 
 const app = express();
 app.use(
-  cors({
-    origin: "http://localhost:3000", // Allow only the frontend URL
-    credentials: true, // Allow cookies if used
-  })
+  cors(
+  //   {
+  //   origin: "http://localhost:3000", // Allow only the frontend URL
+  //   credentials: true, // Allow cookies if used
+  // }
+)
 );
 
 app.use(express.json());

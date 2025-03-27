@@ -4,15 +4,15 @@ import mongoose from "mongoose";
 const complaintSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: true,
+   required: true,
   },
   description: {
     type: String,
-    required: true,
+   required: true,
   },
   location: {
     type: String,
-    required: true,
+   required: true,
   },
   // Example statuses: Submitted, In Progress, Resolved, Rejected
   status: {

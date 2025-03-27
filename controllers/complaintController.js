@@ -60,21 +60,60 @@ export const getComplaintById = async (req, res) => {
   }
 };
 
-// Get all complaints (with optional filtering by user)
-export const getAllComplaints = async (req, res) => {
+// // Get all complaints (with optional filtering by user)
+// export const getAllComplaints = async (req, res) => {
+//   try {
+//     const query = {};
+//     // If a user ID is provided as a query parameter, filter complaints by that user
+//     if (req.query.user) {
+//       query.user = req.query.user;
+//     }
+
+//     const complaints = await Complaint.find(query)
+//       .populate("user")
+//       .populate({
+//         path: "updates",
+//         populate: { path: "updatedBy", select: "firstName lastName email" },
+//       });
+
+//     res.status(200).json(complaints);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+
+// Get all complaints by a specific user
+export const getComplaintsByUser = async (req, res) => {
   try {
-    const query = {};
-    // If a user ID is provided as a query parameter, filter complaints by that user
-    if (req.query.user) {
-      query.user = req.query.user;
+    // Ensure the user ID is provided in the query parameters
+    const userId = req.query.user;
+
+    if (!userId) {
+      return res.status(400).json({ error: "User ID is required" });
     }
 
-    const complaints = await Complaint.find(query)
-      .populate("user")
-      .populate({
-        path: "updates",
-        populate: { path: "updatedBy", select: "firstName lastName email" },
-      });
+    // Find complaints based on the user ID
+    const complaints = await Complaint.find({ user: userId }).populate("user");
+
+    // If no complaints found for the user
+    if (complaints.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No complaints found for this user" });
+    }
+
+    // Return the list of complaints for the user
+    res.status(200).json(complaints);
+  } catch (error) {
+    // Handle any errors
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const getAllComplaints = async (req, res) => {
+  try {
+    // Fetch all complaints from the database and populate related user and updates
+    const complaints = await Complaint.find();
 
     res.status(200).json(complaints);
   } catch (error) {
